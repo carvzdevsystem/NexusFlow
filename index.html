@@ -191,16 +191,6 @@
             transform: scale(1.1);
         }
 
-        .mobile-menu-btn {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-        }
-
         /* ========== CONTEÚDO PRINCIPAL ========== */
         .content-area {
             flex: 1;
@@ -1166,4 +1156,9 @@
                                 <div class="stat-card">
                                     <div class="stat-icon">⚡</div>
                                     <div class="stat-number">${this.getMediaIdade()}</div>
-                                    <div class="stat-label">Idade Média</
+                                    <div class="stat-label">Idade Média</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">🎯</div>
+                                    <div class="stat-number">${this.getTotalGeneros()}</div>
+                                    <div class="stat-label">Gêneros</div
