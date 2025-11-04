@@ -1,99 +1,978 @@
-Pular para o conteúdo
-Histórico de chats
-
-Você disse:
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Aplicação SPA moderna demonstrando conceitos avançados de JavaScript">
-    <meta name="keywords" content="SPA, JavaScript, Frontend, Desenvolvimento Web">
+    <meta name="description" content="NexusFlow - Aplicação SPA moderna para gestão de pessoas">
+    <meta name="keywords" content="SPA, JavaScript, Frontend, Cadastro, Pessoas">
     <meta name="author" content="Seu Nome">
+    <title>NexusFlow - SPA Avançada</title>
     
-    <!-- Pré-carregamento de recursos críticos -->
-    <link rel="preload" href="css/style.css" as="style">
-    <link rel="preload" href="js/script.js" as="script">
-    
-    <!-- Pré-conexão com fontes externas -->
+    <!-- Pré-conexão com fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Fontes otimizadas -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Ícone do site -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-    
-    <title>NexusFlow - Aplicação SPA Avançada</title>
-    
-    <!-- CSS crítico inline para renderização inicial -->
     <style>
-        /* CSS crítico para renderização inicial */
+        /* ========== VARIÁVEIS E RESET ========== */
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --dark-bg: #0f0f1a;
+            --darker-bg: #0a0a12;
+            --card-bg: rgba(255, 255, 255, 0.08);
             --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --glass-effect: blur(20px);
+            --border-radius: 24px;
+            --border-radius-sm: 16px;
+            --border-radius-lg: 32px;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 3rem;
+            --spacing-xl: 4rem;
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             background: var(--dark-bg);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
         }
-        
-        /* Layout básico para evitar CLS */
-        header, main, footer {
+
+        /* ========== HEADER ========== */
+        .glass-header {
+            background: rgba(15, 15, 26, 0.85);
+            backdrop-filter: var(--glass-effect);
+            -webkit-backdrop-filter: var(--glass-effect);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: var(--spacing-sm) 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex-shrink: 0;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            padding: 8px;
+        }
+
+        .site-title {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .title-main {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .main-nav {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-container {
+            display: flex;
+            gap: var(--spacing-xs);
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-effect);
+            -webkit-backdrop-filter: var(--glass-effect);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: var(--spacing-xs);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
+            height: 100%;
+            background: var(--accent-gradient);
+            transition: left var(--transition-normal);
+            z-index: -1;
+            border-radius: 50px;
         }
-        
-        /* Indicador de carregamento */
-        #loading-indicator {
-            position: fixed;
+
+        .nav-btn:hover,
+        .nav-btn[aria-current="page"] {
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn:hover::before,
+        .nav-btn[aria-current="page"]::before {
+            left: 0;
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            transition: transform var(--transition-normal);
+        }
+
+        .nav-btn:hover .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* ========== CONTEÚDO PRINCIPAL ========== */
+        .content-area {
+            flex: 1;
+            padding: var(--spacing-xl) var(--spacing-sm);
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-effect);
+            -webkit-backdrop-filter: var(--glass-effect);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            animation: cardAppear 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 3px;
+            right: 0;
+            height: 1px;
             background: var(--accent-gradient);
-            z-index: 9999;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
         }
-        
-        .loading #loading-indicator {
-            transform: scaleX(0.7);
-            animation: loading 1.5s ease-in-out infinite;
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
-        
-        @keyframes loading {
-            0%, 100% { transform: scaleX(0.7); }
-            50% { transform: scaleX(0.3); }
+
+        /* ========== COMPONENTES DA HOME ========== */
+        .hero-section {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .text-gradient {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            text-align: center;
+            transition: transform var(--transition-normal);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: var(--spacing-lg);
+        }
+
+        .cta-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .cta-btn.primary {
+            background: var(--accent-gradient);
+            color: white;
+        }
+
+        .cta-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        /* ========== FORMULÁRIOS ========== */
+        .form-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .abstract-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius-sm);
+            padding: 1rem 1.2rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all var(--transition-normal);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(79, 172, 254, 0.5);
+            box-shadow: 
+                0 0 0 3px rgba(79, 172, 254, 0.1),
+                inset 0 0 20px rgba(79, 172, 254, 0.05);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .submit-btn {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            padding: 1.2rem 2rem;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: inherit;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left var(--transition-slow);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(79, 172, 254, 0.4),
+                0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .secondary-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1.2rem 2rem;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        /* ========== LISTA DE PESSOAS ========== */
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .pessoas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .pessoa-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            transition: all var(--transition-normal);
+        }
+
+        .pessoa-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .pessoa-header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .pessoa-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .pessoa-info {
+            flex: 1;
+        }
+
+        .pessoa-nome {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .pessoa-email {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .delete-btn {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            flex-shrink: 0;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 107, 107, 0.2);
+            transform: scale(1.1);
+        }
+
+        .pessoa-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            text-align: right;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .pessoa-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--spacing-sm);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .page-actions {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ========== ESTADOS ESPECIAIS ========== */
+        .initial-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--text-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .empty-state h3 {
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #ff6b6b;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .success-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-gradient);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-sm);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ========== SOBRE ========== */
+        .about-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: var(--spacing-md) 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .tech-stack {
+            margin-top: var(--spacing-lg);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+            margin-top: var(--spacing-sm);
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ========== RODAPÉ ========== */
+        .modern-footer {
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: var(--spacing-xl) 0 var(--spacing-md);
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-sm);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .footer-section h3 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.25rem;
+        }
+
+        .footer-section h4 {
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            font-size: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+            padding: 0.25rem 0;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .separator {
+            color: var(--text-muted);
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 768px) {
+            :root {
+                --border-radius: 20px;
+                --spacing-lg: 2rem;
+                --spacing-xl: 2.5rem;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+                gap: var(--spacing-sm);
+            }
+            
+            .main-nav {
+                order: 3;
+                flex-basis: 100%;
+            }
+            
+            .nav-container {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                justify-content: center;
+                min-width: 0;
+            }
+            
+            .nav-text {
+                font-size: 0.8rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .pessoas-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--spacing-sm);
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --border-radius: 16px;
+                --spacing-sm: 0.75rem;
+                --spacing-md: 1.5rem;
+            }
+            
+            .header-container {
+                padding: 0 var(--spacing-xs);
+            }
+            
+            .logo-section {
+                gap: var(--spacing-xs);
+            }
+            
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .title-main {
+                font-size: 1.25rem;
+            }
+            
+            .title-sub {
+                font-size: 0.7rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                border-radius: var(--border-radius-sm);
+                padding: var(--spacing-xs);
+            }
+            
+            .nav-btn {
+                border-radius: var(--border-radius-sm);
+                padding: 1rem;
+            }
+            
+            .content-area {
+                padding: var(--spacing-md) var(--spacing-xs);
+            }
+            
+            .content-card {
+                padding: var(--spacing-md);
+                border-radius: var(--border-radius-sm);
+            }
+            
+            .pessoa-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+            
+            .detail-value {
+                text-align: left;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ========== ACESSIBILIDADE ========== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        .nav-btn:focus-visible,
+        .submit-btn:focus-visible,
+        .form-input:focus-visible {
+            outline: 2px solid #4facfe;
+            outline-offset: 2px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
     </style>
-    
-    <!-- CSS principal carregado de forma não bloqueante -->
-    <link rel="stylesheet" href="css/style.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="css/style.css"></noscript>
 </head>
-<body class="loading">
-    <!-- Indicador de carregamento -->
-    <div id="loading-indicator"></div>
-    
-    <!-- Cabeçalho moderno -->
-    <header role="banner" class="glass-header">
+<body>
+    <!-- Cabeçalho -->
+    <header class="glass-header">
         <div class="header-container">
             <div class="logo-section">
-                <div class="logo" aria-hidden="true">
+                <div class="logo">
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                         <path d="M16 2L20 12L30 12L22 18L26 28L16 22L6 28L10 18L2 12L12 12L16 2Z" 
                               fill="url(#gradient)" stroke="url(#gradient)" stroke-width="1.5"/>
@@ -111,7 +990,7 @@ Você disse:
                 </h1>
             </div>
             
-            <nav class="main-nav" role="navigation" aria-label="Navegação principal">
+            <nav class="main-nav">
                 <div class="nav-container">
                     <button class="nav-btn" data-page="home" aria-current="page">
                         <span class="nav-icon">🏠</span>
@@ -131,36 +1010,28 @@ Você disse:
                     </button>
                 </div>
             </nav>
-            
-            <!-- Menu mobile -->
-            <button class="mobile-menu-btn" aria-label="Abrir menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
     </header>
 
-    <!-- Conteúdo principal -->
-    <main id="content" role="main" class="content-area">
-        <!-- Conteúdo será injetado via JavaScript -->
+    <!-- Conteúdo Principal -->
+    <main id="content" class="content-area">
         <div class="initial-loading">
             <div class="loading-spinner"></div>
-            <p>Carregando experiência...</p>
+            <p>Carregando NexusFlow...</p>
         </div>
     </main>
 
-    <!-- Rodapé moderno -->
-    <footer role="contentinfo" class="modern-footer">
+    <!-- Rodapé -->
+    <footer class="modern-footer">
         <div class="footer-container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>NexusFlow</h3>
-                    <p>Demonstração de aplicação SPA com JavaScript moderno</p>
+                    <p>SPA moderna para gestão de pessoas com JavaScript avançado</p>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Recursos</h4>
+                    <h4>Navegação</h4>
                     <ul class="footer-links">
                         <li><a href="#" data-page="home">Início</a></li>
                         <li><a href="#" data-page="form">Cadastro</a></li>
@@ -172,7 +1043,7 @@ Você disse:
                 <div class="footer-section">
                     <h4>Tecnologias</h4>
                     <div class="tech-tags">
-                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">JavaScript ES6+</span>
                         <span class="tech-tag">CSS3</span>
                         <span class="tech-tag">HTML5</span>
                         <span class="tech-tag">SPA</span>
@@ -181,592 +1052,118 @@ Você disse:
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2024 NexusFlow SPA. Projeto acadêmico - JavaScript Avançado</p>
+                <p>&copy; 2024 NexusFlow - Projeto Acadêmico</p>
                 <div class="footer-meta">
-                    <span>Performance otimizada</span>
+                    <span>JavaScript Avançado</span>
                     <span class="separator">•</span>
-                    <span>Design responsivo</span>
+                    <span>Design Responsivo</span>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts otimizados -->
     <script>
-        // Remover classe de loading quando a página estiver carregada
-        window.addEventListener('load', function() {
-            document.body.classList.remove('loading');
-            
-            // Carregar CSS não crítico
-            const nonCriticalCSS = document.createElement('link');
-            nonCriticalCSS.rel = 'stylesheet';
-            nonCriticalCSS.href = 'css/non-critical.css';
-            document.head.appendChild(nonCriticalCSS);
-        });
-        
-        // Prevenir comportamento padrão de links do footer
-        document.addEventListener('DOMContentLoaded', function() {
-            const footerLinks = document.querySelectorAll('.footer-links a');
-            footerLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const page = this.getAttribute('data-page');
-                    if (page) {
-                        // Disparar evento de mudança de página
-                        window.dispatchEvent(new CustomEvent('pageChange', { 
-                            detail: { page: page } 
-                        }));
+        // ========== GERENCIADOR DE ESTADO ==========
+        class AppState {
+            constructor() {
+                this.pessoas = JSON.parse(localStorage.getItem('nexusflow-pessoas')) || [];
+                this.currentPage = 'home';
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.navigateTo('home');
+            }
+
+            setupEventListeners() {
+                // Navegação
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.nav-btn')) {
+                        const page = e.target.closest('.nav-btn').dataset.page;
+                        this.navigateTo(page);
+                    }
+                    
+                    if (e.target.closest('.cta-btn')) {
+                        const page = e.target.closest('.cta-btn').dataset.page;
+                        if (page) this.navigateTo(page);
+                    }
+                    
+                    if (e.target.closest('.footer-links a')) {
+                        e.preventDefault();
+                        const page = e.target.closest('a').dataset.page;
+                        this.navigateTo(page);
                     }
                 });
-            });
-        });
-    </script>
-    
-    <!-- Script principal com defer -->
-    <script src="js/script.js" defer></script>
-</body>
-</html>
 
-
-elabore um readme para publicaçao no github profissional e com designe moderno
-O ChatGPT disse:
-Aqui está um README.md profissional, moderno e visualmente atraente para o seu projeto NexusFlow - Aplicação SPA Avançada.
-O texto está totalmente formatado em Markdown com emojis, seções claras, badges e um design digno de publicação no GitHub 👇
-
-# ⚡ NexusFlow — Aplicação SPA Avançada
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Ativo-brightgreen?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Versão-1.0.0-blue?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Linguagem-JavaScript-yellow?style=for-the-badge&logo=javascript"/>
-  <img src="https://img.shields.io/badge/Estilo-Modern%20UI%2FUX-purple?style=for-the-badge"/>
-</p>
-
-> **NexusFlow** é uma aplicação **Single Page Application (SPA)** desenvolvida para demonstrar **conceitos avançados de JavaScript**, incluindo manipulação de DOM, roteamento dinâmico, armazenamento local e componentes interativos — tudo em uma interface moderna e responsiva.
-
----
-
-## 🚀 Demonstração Visual
-
-<p align="center">
-  <img src="https://github.com/username/nexusflow/assets/demo-preview.gif" alt="Demonstração NexusFlow" width="80%"/>
-</p>
-
----
-
-## 🧩 Funcionalidades Principais
-
-✅ **Interface SPA Real** — Navegação fluida entre seções sem recarregar a página.  
-✅ **Manipulação avançada do DOM** — Atualizações dinâmicas e reativas.  
-✅ **Menu Responsivo** — Design adaptável para desktop, tablet e mobile.  
-✅ **Sistema de Formulário** — Armazenamento local e validação dinâmica.  
-✅ **Gestão de Usuários (Pessoas)** — Listagem interativa e persistente.  
-✅ **Desempenho Otimizado** — Pré-carregamento e carregamento não bloqueante de scripts e estilos.  
-✅ **Design Glassmorphism + Gradientes** — Layout moderno com efeitos translúcidos e animações suaves.  
-
----
-
-## 🧠 Tecnologias Utilizadas
-
-| Categoria | Tecnologias |
-|------------|--------------|
-| 💻 **Frontend Base** | HTML5, CSS3, JavaScript (ES6+) |
-| 🎨 **Estilo & Layout** | Flexbox, Grid, Glassmorphism, Gradientes |
-| ⚙️ **Arquitetura** | SPA (Single Page Application) |
-| 📦 **Armazenamento Local** | LocalStorage API |
-| 🔄 **Boas Práticas** | SEO, Performance, Acessibilidade (ARIA), Responsividade |
-
----
-
-## 🏗️ Estrutura do Projeto
-
-NexusFlow/
-│
-├── css/
-│ ├── style.css # Estilos principais
-│ ├── non-critical.css # Estilos carregados de forma assíncrona
-│
-├── js/
-│ └── script.js # Lógica principal e navegação SPA
-│
-├── index.html # Página principal
-├── README.md # Este arquivo
-└── assets/ (opcional) # Imagens, ícones ou fontes personalizadas
-
-
----
-
-## ⚙️ Como Executar Localmente
-
-1. **Clone o repositório**
-   ```bash
-   git clone https://github.com/seu-usuario/nexusflow.git
-Acesse a pasta do projeto
-
-cd nexusflow
-Abra o arquivo principal
-
-index.html
-💡 Dica: utilize a extensão Live Server do VSCode para simular um ambiente SPA completo.
-
-🌈 Layout & Design
-O design do NexusFlow foi desenvolvido com foco em:
-
-💎 Modernidade visual (gradientes suaves e sombras sutis)
-
-📱 Responsividade total (mobile-first e fluidez)
-
-🌙 Tema escuro elegante
-
-⚡ Performance de renderização (uso de CSS crítico e carregamento diferido)
-
-<p align="center"> <img src="https://github.com/username/nexusflow/assets/layout-preview.png" alt="Layout NexusFlow" width="85%"/> </p>
-🧩 Conceitos Envolvidos
-Manipulação do DOM com JavaScript puro
-
-Navegação SPA sem frameworks
-
-Componentização simples
-
-Armazenamento no LocalStorage
-
-Uso de eventos customizados
-
-SEO e acessibilidade aprimorados
-
-📄 Licença
-Este projeto é distribuído sob a licença MIT.
-Sinta-se livre para usar, modificar e compartilhar — desde que mantenha os créditos.
-
-✨ Autor
-Desenvolvido por Seu Nome
-💬 "Código limpo é aquele que respira organização, propósito e beleza."
-
-<p align="center"> <a href="https://github.com/seu-usuario/nexusflow" target="_blank"> <img src="https://img.shields.io/badge/GitHub-NexusFlow-181717?style=for-the-badge&logo=github"/> </a> </p>
-<p align="center"> 💡 Projeto acadêmico desenvolvido para demonstrar proficiência em <strong>JavaScript Avançado</strong> e <strong>Front-End Moderno</strong>. </p> ```
-🧠 Dica profissional:
-Se quiser, posso personalizar o README com:
-
-Print real do seu site (basta você me enviar uma captura de tela).
-
-Link do seu repositório GitHub real (para substituir os placeholders).
-
-Uma versão com dark mode no próprio README (usando Markdown avançado).
-
-Quer que eu monte essa versão personalizada completa para publicação?
-
-Você disse:
-coloqueo css e o javascript junto com html
-O ChatGPT disse:
-Perfeito 🔥 — abaixo está o arquivo completo e integrado (index.html) com HTML + CSS + JavaScript juntos em um único documento.
-Ele mantém todo o design moderno, animações, responsividade e o sistema SPA dinâmico.
-Pronto para rodar direto no navegador ou publicar no GitHub Pages 🌐
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Aplicação SPA moderna demonstrando conceitos avançados de JavaScript">
-  <title>NexusFlow - Aplicação SPA Avançada</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    /* ======== VARIÁVEIS GLOBAIS ======== */
-    :root {
-      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      --dark-bg: #0f0f1a;
-      --text-primary: #ffffff;
-      --glass-bg: rgba(255, 255, 255, 0.08);
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --radius-xl: 1.5rem;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--dark-bg);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    a {
-      color: #4facfe;
-      text-decoration: none;
-    }
-
-    header.glass-header {
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      backdrop-filter: blur(10px);
-      background: var(--glass-bg);
-      border-bottom: 1px solid var(--glass-border);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .header-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 2rem;
-    }
-
-    .logo-section {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .site-title {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-
-    .title-main {
-      font-size: 1.3rem;
-      font-weight: 700;
-    }
-
-    .title-sub {
-      font-size: 0.8rem;
-      opacity: 0.7;
-    }
-
-    .main-nav {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .nav-btn {
-      background: none;
-      border: none;
-      color: var(--text-primary);
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      cursor: pointer;
-      padding: 0.5rem 0.9rem;
-      border-radius: var(--radius-xl);
-      transition: 0.3s;
-    }
-
-    .nav-btn:hover,
-    .nav-btn[aria-current="page"] {
-      background: var(--accent-gradient);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(79, 172, 254, 0.4);
-    }
-
-    .mobile-menu-btn {
-      display: none;
-      flex-direction: column;
-      gap: 0.3rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    .mobile-menu-btn span {
-      width: 25px;
-      height: 3px;
-      background: #fff;
-      border-radius: 3px;
-    }
-
-    main.content-area {
-      flex: 1;
-      padding: 2rem;
-      max-width: 1000px;
-      margin: auto;
-      transition: opacity 0.4s ease;
-    }
-
-    section.page {
-      animation: fadeIn 0.6s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* RODAPÉ */
-    footer.modern-footer {
-      background: var(--glass-bg);
-      border-top: 1px solid var(--glass-border);
-      padding: 2rem 1rem;
-      backdrop-filter: blur(8px);
-    }
-
-    .footer-container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .footer-content {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-    }
-
-    .footer-section h4, .footer-section h3 {
-      margin-bottom: 0.8rem;
-    }
-
-    .footer-links {
-      list-style: none;
-    }
-
-    .footer-links li {
-      margin: 0.3rem 0;
-    }
-
-    .tech-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .tech-tag {
-      background: var(--accent-gradient);
-      padding: 0.3rem 0.8rem;
-      border-radius: 1rem;
-      font-size: 0.8rem;
-    }
-
-    .footer-bottom {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
-    /* RESPONSIVO */
-    @media (max-width: 768px) {
-      .main-nav {
-        display: none;
-        flex-direction: column;
-        background: var(--glass-bg);
-        position: absolute;
-        top: 70px;
-        right: 10px;
-        width: 200px;
-        border-radius: var(--radius-xl);
-        padding: 1rem;
-      }
-
-      .main-nav.active {
-        display: flex;
-      }
-
-      .mobile-menu-btn {
-        display: flex;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <!-- HEADER -->
-  <header class="glass-header">
-    <div class="header-container">
-      <div class="logo-section">
-        <div class="logo" aria-hidden="true">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <path d="M16 2L20 12L30 12L22 18L26 28L16 22L6 28L10 18L2 12L12 12L16 2Z"
-              fill="url(#gradient)" stroke="url(#gradient)" stroke-width="1.5" />
-            <defs>
-              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#4facfe" />
-                <stop offset="100%" stop-color="#00f2fe" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-        <h1 class="site-title">
-          <span class="title-main">NexusFlow</span>
-          <span class="title-sub">SPA Avançada</span>
-        </h1>
-      </div>
-
-      <nav class="main-nav" role="navigation">
-        <button class="nav-btn" data-page="home" aria-current="page">🏠 Início</button>
-        <button class="nav-btn" data-page="form">📝 Cadastro</button>
-        <button class="nav-btn" data-page="pessoas">👥 Pessoas</button>
-        <button class="nav-btn" data-page="sobre">ℹ️ Sobre</button>
-      </nav>
-
-      <button class="mobile-menu-btn" aria-label="Abrir menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main id="content" class="content-area">
-    <section class="page" id="home">
-      <h2>Bem-vindo ao NexusFlow ⚡</h2>
-      <p>Explore uma SPA completa feita com JavaScript moderno e performance otimizada.</p>
-    </section>
-  </main>
-
-  <!-- RODAPÉ -->
-  <footer class="modern-footer">
-    <div class="footer-container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>NexusFlow</h3>
-          <p>Demonstração de aplicação SPA com JavaScript moderno</p>
-        </div>
-        <div class="footer-section">
-          <h4>Recursos</h4>
-          <ul class="footer-links">
-            <li><a href="#" data-page="home">Início</a></li>
-            <li><a href="#" data-page="form">Cadastro</a></li>
-            <li><a href="#" data-page="pessoas">Pessoas</a></li>
-            <li><a href="#" data-page="sobre">Sobre</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Tecnologias</h4>
-          <div class="tech-tags">
-            <span class="tech-tag">JavaScript</span>
-            <span class="tech-tag">CSS3</span>
-            <span class="tech-tag">HTML5</span>
-            <span class="tech-tag">SPA</span>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 NexusFlow SPA. Projeto acadêmico - JavaScript Avançado</p>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    /* ============ SISTEMA DE NAVEGAÇÃO SPA ============ */
-    const content = document.getElementById('content');
-    const navButtons = document.querySelectorAll('.nav-btn');
-    const footerLinks = document.querySelectorAll('.footer-links a');
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const mainNav = document.querySelector('.main-nav');
-
-    const pages = {
-      home: `
-        <section class="page">
-          <h2>🏠 Início</h2>
-          <p>Bem-vindo à <strong>NexusFlow</strong> — uma SPA moderna que combina design, performance e interatividade.</p>
-        </section>`,
-      form: `
-        <section class="page">
-          <h2>📝 Cadastro</h2>
-          <form id="cadastroForm">
-            <input type="text" id="nome" placeholder="Digite seu nome" required>
-            <input type="email" id="email" placeholder="Digite seu email" required>
-            <button type="submit">Cadastrar</button>
-          </form>
-        </section>`,
-      pessoas: `
-        <section class="page">
-          <h2>👥 Pessoas Cadastradas</h2>
-          <ul id="listaPessoas"></ul>
-        </section>`,
-      sobre: `
-        <section class="page">
-          <h2>ℹ️ Sobre</h2>
-          <p>O <strong>NexusFlow</strong> é um projeto acadêmico que demonstra o poder do JavaScript puro na criação de aplicações de página única (SPA).</p>
-        </section>`
-    };
-
-    function renderPage(page) {
-      content.style.opacity = '0';
-      setTimeout(() => {
-        content.innerHTML = pages[page] || pages.home;
-        content.style.opacity = '1';
-        navButtons.forEach(btn => btn.removeAttribute('aria-current'));
-        document.querySelector(`[data-page="${page}"]`)?.setAttribute('aria-current', 'page');
-        if (page === 'pessoas') carregarPessoas();
-        if (page === 'form') iniciarFormulario();
-      }, 200);
-    }
-
-    navButtons.forEach(btn => {
-      btn.addEventListener('click', () => renderPage(btn.dataset.page));
-    });
-
-    footerLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        renderPage(link.dataset.page);
-      });
-    });
-
-    mobileMenuBtn.addEventListener('click', () => {
-      mainNav.classList.toggle('active');
-    });
-
-    /* ============ FORMULÁRIO E LOCALSTORAGE ============ */
-    function iniciarFormulario() {
-      const form = document.getElementById('cadastroForm');
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        const nome = document.getElementById('nome').value.trim();
-        const email = document.getElementById('email').value.trim();
-        if (!nome || !email) return;
-        const pessoas = JSON.parse(localStorage.getItem('pessoas')) || [];
-        pessoas.push({ nome, email });
-        localStorage.setItem('pessoas', JSON.stringify(pessoas));
-        alert('Cadastro realizado com sucesso!');
-        form.reset();
-      });
-    }
-
-    function carregarPessoas() {
-      const lista = document.getElementById('listaPessoas');
-      const pessoas = JSON.parse(localStorage.getItem('pessoas')) || [];
-      lista.innerHTML = pessoas.length
-        ? pessoas.map(p => `<li>${p.nome} — ${p.email}</li>`).join('')
-        : '<p>Nenhuma pessoa cadastrada ainda.</p>';
-    }
-
-    /* Inicialização */
-    renderPage('home');
-  </script>
-</body>
-</html>
-✅ Recursos inclusos
-Totalmente responsivo (mobile-first)
-
-SPA funcional com navegação sem recarregar
-
-Formulário com LocalStorage
-
-Design Glassmorphism + Gradientes
-
-Rodapé moderno e organizado
-
-Quer que eu adicione animações suaves de transição de página (ex: fade ou slide entre seções)? Isso deixaria a experiência ainda mais profissional.
-
-
-
-
-Nenhum arquivo escolhidoNenhum arquivo escolhido
-O ChatGPT pode cometer erros. Por isso, lembre-se de conferir informações relevantes.
+                // Formulário
+                document.addEventListener('submit', (e) => {
+                    if (e.target.id === 'cadastroForm') {
+                        e.preventDefault();
+                        this.handleFormSubmit(e.target);
+                    }
+                });
+
+                // Deleção
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('delete-btn')) {
+                        const id = e.target.dataset.id;
+                        this.deletePessoa(id);
+                    }
+                });
+            }
+
+            navigateTo(page) {
+                this.currentPage = page;
+                this.updateNavigation();
+                this.renderPage();
+            }
+
+            updateNavigation() {
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.setAttribute('aria-current', 
+                        btn.dataset.page === this.currentPage ? 'page' : 'false');
+                });
+            }
+
+            renderPage() {
+                const content = document.getElementById('content');
+                
+                switch(this.currentPage) {
+                    case 'home':
+                        content.innerHTML = this.renderHome();
+                        break;
+                    case 'form':
+                        content.innerHTML = this.renderForm();
+                        break;
+                    case 'pessoas':
+                        content.innerHTML = this.renderPessoas();
+                        break;
+                    case 'sobre':
+                        content.innerHTML = this.renderSobre();
+                        break;
+                }
+
+                content.style.animation = 'none';
+                setTimeout(() => {
+                    content.style.animation = 'cardAppear 0.6s ease-out';
+                }, 10);
+            }
+
+            renderHome() {
+                return `
+                    <div class="content-card">
+                        <div class="hero-section">
+                            <h2 class="text-gradient">Bem-vindo ao NexusFlow</h2>
+                            <p class="hero-description">Sistema moderno de cadastro e gestão de pessoas</p>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-icon">👥</div>
+                                    <div class="stat-number">${this.pessoas.length}</div>
+                                    <div class="stat-label">Pessoas Cadastradas</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-number">${this.getMediaIdade()}</div>
+                                    <div class="stat-label">Idade Média</
