@@ -1,224 +1,390 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Aplicação SPA moderna demonstrando conceitos avançados de JavaScript">
-    <meta name="keywords" content="SPA, JavaScript, Frontend, Desenvolvimento Web">
-    <meta name="author" content="Seu Nome">
-    
-    <!-- Pré-carregamento de recursos críticos -->
-    <link rel="preload" href="css/style.css" as="style">
-    <link rel="preload" href="js/script.js" as="script">
-    
-    <!-- Pré-conexão com fontes externas -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Fontes otimizadas -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Ícone do site -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-    
-    <title>NexusFlow - Aplicação SPA Avançada</title>
-    
-    <!-- CSS crítico inline para renderização inicial -->
-    <style>
-        /* CSS crítico para renderização inicial */
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --dark-bg: #0f0f1a;
-            --text-primary: #ffffff;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--dark-bg);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        /* Layout básico para evitar CLS */
-        header, main, footer {
-            width: 100%;
-        }
-        
-        /* Indicador de carregamento */
-        #loading-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--accent-gradient);
-            z-index: 9999;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
-        }
-        
-        .loading #loading-indicator {
-            transform: scaleX(0.7);
-            animation: loading 1.5s ease-in-out infinite;
-        }
-        
-        @keyframes loading {
-            0%, 100% { transform: scaleX(0.7); }
-            50% { transform: scaleX(0.3); }
-        }
-    </style>
-    
-    <!-- CSS principal carregado de forma não bloqueante -->
-    <link rel="stylesheet" href="css/style.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="css/style.css"></noscript>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplicação SPA moderna demonstrando conceitos avançados de JavaScript">
+  <title>NexusFlow - Aplicação SPA Avançada</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ======== VARIÁVEIS GLOBAIS ======== */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --dark-bg: #0f0f1a;
+      --text-primary: #ffffff;
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --radius-xl: 1.5rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: #4facfe;
+      text-decoration: none;
+    }
+
+    header.glass-header {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      backdrop-filter: blur(10px);
+      background: var(--glass-bg);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .site-title {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .title-main {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .title-sub {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .main-nav {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-xl);
+      transition: 0.3s;
+    }
+
+    .nav-btn:hover,
+    .nav-btn[aria-current="page"] {
+      background: var(--accent-gradient);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(79, 172, 254, 0.4);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      flex-direction: column;
+      gap: 0.3rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mobile-menu-btn span {
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      border-radius: 3px;
+    }
+
+    main.content-area {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+      transition: opacity 0.4s ease;
+    }
+
+    section.page {
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RODAPÉ */
+    footer.modern-footer {
+      background: var(--glass-bg);
+      border-top: 1px solid var(--glass-border);
+      padding: 2rem 1rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .footer-section h4, .footer-section h3 {
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin: 0.3rem 0;
+    }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tech-tag {
+      background: var(--accent-gradient);
+      padding: 0.3rem 0.8rem;
+      border-radius: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* RESPONSIVO */
+    @media (max-width: 768px) {
+      .main-nav {
+        display: none;
+        flex-direction: column;
+        background: var(--glass-bg);
+        position: absolute;
+        top: 70px;
+        right: 10px;
+        width: 200px;
+        border-radius: var(--radius-xl);
+        padding: 1rem;
+      }
+
+      .main-nav.active {
+        display: flex;
+      }
+
+      .mobile-menu-btn {
+        display: flex;
+      }
+    }
+  </style>
 </head>
-<body class="loading">
-    <!-- Indicador de carregamento -->
-    <div id="loading-indicator"></div>
-    
-    <!-- Cabeçalho moderno -->
-    <header role="banner" class="glass-header">
-        <div class="header-container">
-            <div class="logo-section">
-                <div class="logo" aria-hidden="true">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                        <path d="M16 2L20 12L30 12L22 18L26 28L16 22L6 28L10 18L2 12L12 12L16 2Z" 
-                              fill="url(#gradient)" stroke="url(#gradient)" stroke-width="1.5"/>
-                        <defs>
-                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#4facfe"/>
-                                <stop offset="100%" stop-color="#00f2fe"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                </div>
-                <h1 class="site-title">
-                    <span class="title-main">NexusFlow</span>
-                    <span class="title-sub">SPA Avançada</span>
-                </h1>
-            </div>
-            
-            <nav class="main-nav" role="navigation" aria-label="Navegação principal">
-                <div class="nav-container">
-                    <button class="nav-btn" data-page="home" aria-current="page">
-                        <span class="nav-icon">🏠</span>
-                        <span class="nav-text">Início</span>
-                    </button>
-                    <button class="nav-btn" data-page="form">
-                        <span class="nav-icon">📝</span>
-                        <span class="nav-text">Cadastro</span>
-                    </button>
-                    <button class="nav-btn" data-page="pessoas">
-                        <span class="nav-icon">👥</span>
-                        <span class="nav-text">Pessoas</span>
-                    </button>
-                    <button class="nav-btn" data-page="sobre">
-                        <span class="nav-icon">ℹ️</span>
-                        <span class="nav-text">Sobre</span>
-                    </button>
-                </div>
-            </nav>
-            
-            <!-- Menu mobile -->
-            <button class="mobile-menu-btn" aria-label="Abrir menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </header>
 
-    <!-- Conteúdo principal -->
-    <main id="content" role="main" class="content-area">
-        <!-- Conteúdo será injetado via JavaScript -->
-        <div class="initial-loading">
-            <div class="loading-spinner"></div>
-            <p>Carregando experiência...</p>
+<body>
+  <!-- HEADER -->
+  <header class="glass-header">
+    <div class="header-container">
+      <div class="logo-section">
+        <div class="logo" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M16 2L20 12L30 12L22 18L26 28L16 22L6 28L10 18L2 12L12 12L16 2Z"
+              fill="url(#gradient)" stroke="url(#gradient)" stroke-width="1.5" />
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4facfe" />
+                <stop offset="100%" stop-color="#00f2fe" />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
-    </main>
+        <h1 class="site-title">
+          <span class="title-main">NexusFlow</span>
+          <span class="title-sub">SPA Avançada</span>
+        </h1>
+      </div>
 
-    <!-- Rodapé moderno -->
-    <footer role="contentinfo" class="modern-footer">
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>NexusFlow</h3>
-                    <p>Demonstração de aplicação SPA com JavaScript moderno</p>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Recursos</h4>
-                    <ul class="footer-links">
-                        <li><a href="#" data-page="home">Início</a></li>
-                        <li><a href="#" data-page="form">Cadastro</a></li>
-                        <li><a href="#" data-page="pessoas">Pessoas</a></li>
-                        <li><a href="#" data-page="sobre">Sobre</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Tecnologias</h4>
-                    <div class="tech-tags">
-                        <span class="tech-tag">JavaScript</span>
-                        <span class="tech-tag">CSS3</span>
-                        <span class="tech-tag">HTML5</span>
-                        <span class="tech-tag">SPA</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2024 NexusFlow SPA. Projeto acadêmico - JavaScript Avançado</p>
-                <div class="footer-meta">
-                    <span>Performance otimizada</span>
-                    <span class="separator">•</span>
-                    <span>Design responsivo</span>
-                </div>
-            </div>
+      <nav class="main-nav" role="navigation">
+        <button class="nav-btn" data-page="home" aria-current="page">🏠 Início</button>
+        <button class="nav-btn" data-page="form">📝 Cadastro</button>
+        <button class="nav-btn" data-page="pessoas">👥 Pessoas</button>
+        <button class="nav-btn" data-page="sobre">ℹ️ Sobre</button>
+      </nav>
+
+      <button class="mobile-menu-btn" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main id="content" class="content-area">
+    <section class="page" id="home">
+      <h2>Bem-vindo ao NexusFlow ⚡</h2>
+      <p>Explore uma SPA completa feita com JavaScript moderno e performance otimizada.</p>
+    </section>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer class="modern-footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>NexusFlow</h3>
+          <p>Demonstração de aplicação SPA com JavaScript moderno</p>
         </div>
-    </footer>
+        <div class="footer-section">
+          <h4>Recursos</h4>
+          <ul class="footer-links">
+            <li><a href="#" data-page="home">Início</a></li>
+            <li><a href="#" data-page="form">Cadastro</a></li>
+            <li><a href="#" data-page="pessoas">Pessoas</a></li>
+            <li><a href="#" data-page="sobre">Sobre</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Tecnologias</h4>
+          <div class="tech-tags">
+            <span class="tech-tag">JavaScript</span>
+            <span class="tech-tag">CSS3</span>
+            <span class="tech-tag">HTML5</span>
+            <span class="tech-tag">SPA</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 NexusFlow SPA. Projeto acadêmico - JavaScript Avançado</p>
+      </div>
+    </div>
+  </footer>
 
-    <!-- Scripts otimizados -->
-    <script>
-        // Remover classe de loading quando a página estiver carregada
-        window.addEventListener('load', function() {
-            document.body.classList.remove('loading');
-            
-            // Carregar CSS não crítico
-            const nonCriticalCSS = document.createElement('link');
-            nonCriticalCSS.rel = 'stylesheet';
-            nonCriticalCSS.href = 'css/non-critical.css';
-            document.head.appendChild(nonCriticalCSS);
-        });
-        
-        // Prevenir comportamento padrão de links do footer
-        document.addEventListener('DOMContentLoaded', function() {
-            const footerLinks = document.querySelectorAll('.footer-links a');
-            footerLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const page = this.getAttribute('data-page');
-                    if (page) {
-                        // Disparar evento de mudança de página
-                        window.dispatchEvent(new CustomEvent('pageChange', { 
-                            detail: { page: page } 
-                        }));
-                    }
-                });
-            });
-        });
-    </script>
-    
-    <!-- Script principal com defer -->
-    <script src="js/script.js" defer></script>
+  <script>
+    /* ============ SISTEMA DE NAVEGAÇÃO SPA ============ */
+    const content = document.getElementById('content');
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const footerLinks = document.querySelectorAll('.footer-links a');
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const mainNav = document.querySelector('.main-nav');
+
+    const pages = {
+      home: `
+        <section class="page">
+          <h2>🏠 Início</h2>
+          <p>Bem-vindo à <strong>NexusFlow</strong> — uma SPA moderna que combina design, performance e interatividade.</p>
+        </section>`,
+      form: `
+        <section class="page">
+          <h2>📝 Cadastro</h2>
+          <form id="cadastroForm">
+            <input type="text" id="nome" placeholder="Digite seu nome" required>
+            <input type="email" id="email" placeholder="Digite seu email" required>
+            <button type="submit">Cadastrar</button>
+          </form>
+        </section>`,
+      pessoas: `
+        <section class="page">
+          <h2>👥 Pessoas Cadastradas</h2>
+          <ul id="listaPessoas"></ul>
+        </section>`,
+      sobre: `
+        <section class="page">
+          <h2>ℹ️ Sobre</h2>
+          <p>O <strong>NexusFlow</strong> é um projeto acadêmico que demonstra o poder do JavaScript puro na criação de aplicações de página única (SPA).</p>
+        </section>`
+    };
+
+    function renderPage(page) {
+      content.style.opacity = '0';
+      setTimeout(() => {
+        content.innerHTML = pages[page] || pages.home;
+        content.style.opacity = '1';
+        navButtons.forEach(btn => btn.removeAttribute('aria-current'));
+        document.querySelector(`[data-page="${page}"]`)?.setAttribute('aria-current', 'page');
+        if (page === 'pessoas') carregarPessoas();
+        if (page === 'form') iniciarFormulario();
+      }, 200);
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => renderPage(btn.dataset.page));
+    });
+
+    footerLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        renderPage(link.dataset.page);
+      });
+    });
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mainNav.classList.toggle('active');
+    });
+
+    /* ============ FORMULÁRIO E LOCALSTORAGE ============ */
+    function iniciarFormulario() {
+      const form = document.getElementById('cadastroForm');
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const nome = document.getElementById('nome').value.trim();
+        const email = document.getElementById('email').value.trim();
+        if (!nome || !email) return;
+        const pessoas = JSON.parse(localStorage.getItem('pessoas')) || [];
+        pessoas.push({ nome, email });
+        localStorage.setItem('pessoas', JSON.stringify(pessoas));
+        alert('Cadastro realizado com sucesso!');
+        form.reset();
+      });
+    }
+
+    function carregarPessoas() {
+      const lista = document.getElementById('listaPessoas');
+      const pessoas = JSON.parse(localStorage.getItem('pessoas')) || [];
+      lista.innerHTML = pessoas.length
+        ? pessoas.map(p => `<li>${p.nome} — ${p.email}</li>`).join('')
+        : '<p>Nenhuma pessoa cadastrada ainda.</p>';
+    }
+
+    /* Inicialização */
+    renderPage('home');
+  </script>
 </body>
 </html>
